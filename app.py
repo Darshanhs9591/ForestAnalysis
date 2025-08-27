@@ -54,6 +54,9 @@ def main():
     download_weights()  # Make sure this is defined and called before loading
     model = load_model()
     st.write("Model loaded successfully.")
+
+    img_np = ... # your image as numpy array
+    results = model.predict(img_np, conf=0.1, verbose=False)
     # Your app logic here, e.g. image uploads and inference
     # For example:
     # uploaded_file = st.file_uploader(...)
