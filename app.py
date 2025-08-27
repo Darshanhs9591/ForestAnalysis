@@ -24,14 +24,19 @@ try:
 except ModuleNotFoundError:
     FOLIUM_AVAILABLE = False
 
+import gdown
+import os
+import streamlit as st
+
 def download_weights():
     weights_path = 'weights/last.pt'
     if not os.path.exists(weights_path):
         os.makedirs('weights', exist_ok=True)
         url = 'https://drive.google.com/uc?id=18Kh8T9GdwMBEOw6DvNR3BHLrhGqioPWs'
-        st.info("Downloading YOLO weights. Please wait...")
+        st.info("Downloading YOLO weights...")
         gdown.download(url, weights_path, quiet=False)
-        st.success("Download completed.")
+        st.success("Download completed!")
+
 
 import os
 import streamlit as st
@@ -42,16 +47,18 @@ from ultralytics import YOLO
 import os
 
 @st.cache_resource
+@st.cache_resource
 def load_yolo_model():
     MODEL_PATH = 'weights/last.pt'
     if not os.path.exists(MODEL_PATH):
-        st.error(f"YOLO model weights not found at '{MODEL_PATH}'")
+        st.error(f"Model weights not found at {MODEL_PATH}")
         st.stop()
     try:
         return YOLO(MODEL_PATH)
     except Exception as e:
         st.error(f"Error loading YOLO model: {e}")
         st.stop()
+
 
 # Load once and store globally
 model = load_yolo_model()
