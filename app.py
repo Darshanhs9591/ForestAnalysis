@@ -33,6 +33,10 @@ def download_weights():
         gdown.download(url, weights_path, quiet=False)
         st.success("Download completed.")
 
+import os
+import streamlit as st
+from ultralytics import YOLO
+
 @st.cache_resource
 def load_model():
     MODEL_PATH = 'weights/last.pt'
@@ -40,16 +44,26 @@ def load_model():
         st.error(f"YOLO model weights not found at '{MODEL_PATH}'. Please ensure the file exists.")
         st.stop()
     try:
-        return YOLO(MODEL_PATH)
+        model = YOLO(MODEL_PATH)
+        return model
     except Exception as e:
         st.error(f"Error loading YOLO model from '{MODEL_PATH}': {e}. Please check the file and your ultralytics installation.")
         st.stop()
 
 def main():
-    download_weights()
+    download_weights()  # Make sure this is defined and called before loading
     model = load_model()
     st.write("Model loaded successfully.")
-    # Proceed with app logic like image uploads, inference etc.
+    # Your app logic here, e.g. image uploads and inference
+    # For example:
+    # uploaded_file = st.file_uploader(...)
+    # if uploaded_file:
+    #    img = Image.open(uploaded_file)
+    #    results = model(img)
+    #    ...
+
+
+
 
 
 
