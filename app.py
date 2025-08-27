@@ -29,6 +29,8 @@ import gdown
 import os
 import streamlit as st
 
+import gdown
+
 def download_weights():
     weights_path = 'weights/last.pt'
     if not os.path.exists(weights_path):
@@ -37,6 +39,7 @@ def download_weights():
         st.info("Downloading YOLO weights...")
         gdown.download(url, weights_path, quiet=False)
         st.success("Download completed!")
+
 
 
 import os
