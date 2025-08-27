@@ -11,34 +11,28 @@ import os
 import requests
 from io import BytesIO
 
-# Attempt to import streamlit_folium with fallback (no change)
+import os
+import streamlit as st
+import gdown
+from ultralytics import YOLO
+
+# Optional Folium import with fallback
 try:
     from streamlit_folium import st_folium
     import folium
     FOLIUM_AVAILABLE = True
 except ModuleNotFoundError:
     FOLIUM_AVAILABLE = False
-    # In a real deployment, you might log this instead of showing an error immediately
-    # st.error("The 'streamlit_folium' module is not installed. Please install it using pip install streamlit-folium.")
-
-
-
-import os
-import gdown
 
 def download_weights():
     weights_path = 'weights/last.pt'
     if not os.path.exists(weights_path):
         os.makedirs('weights', exist_ok=True)
         url = 'https://drive.google.com/uc?id=18Kh8T9GdwMBEOw6DvNR3BHLrhGqioPWs'
-        print("Downloading weights file using gdown...")
+        st.info("Downloading YOLO weights. Please wait...")
         gdown.download(url, weights_path, quiet=False)
-        print("Download completed.")
+        st.success("Download completed.")
 
-download_weights()
-
-
-# --- YOLO Model Initialization (no change) ---
 @st.cache_resource
 def load_model():
     MODEL_PATH = 'weights/last.pt'
@@ -51,7 +45,12 @@ def load_model():
         st.error(f"Error loading YOLO model from '{MODEL_PATH}': {e}. Please check the file and your ultralytics installation.")
         st.stop()
 
-model = load_model()
+def main():
+    download_weights()
+    model = load_model()
+    st.write("Model loaded successfully.")
+    # Proceed with app logic like image uploads, inference etc.
+
 
 # Initialize session state for page navigation
 if 'page' not in st.session_state:
