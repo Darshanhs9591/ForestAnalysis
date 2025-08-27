@@ -41,11 +41,16 @@ def download_weights():
         st.success("Download completed!")
 
 # Cache the model loading to avoid reloading on each rerun
+import os
+import streamlit as st
+from ultralytics import YOLO
+
+MODEL_PATH = 'weights/last.pt'  # Path relative to your app root folder
+
 @st.cache_resource
 def load_model():
-    MODEL_PATH = 'weights/last.pt'
     if not os.path.exists(MODEL_PATH):
-        st.error(f"Model weights not found at {MODEL_PATH}. Please wait for download or check file.")
+        st.error(f"YOLO weights file missing at {MODEL_PATH}. Please add it.")
         st.stop()
     try:
         model = YOLO(MODEL_PATH)
@@ -53,6 +58,7 @@ def load_model():
     except Exception as e:
         st.error(f"Error loading YOLO model: {e}")
         st.stop()
+
 
 # Initialize model in session_state once per session
 if 'model' not in st.session_state:
