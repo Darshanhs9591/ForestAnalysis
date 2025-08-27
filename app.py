@@ -62,7 +62,6 @@ def load_model():
 
 # Initialize model in session_state once per session
 if 'model' not in st.session_state:
-    download_weights()           # Ensure weights are downloaded
     st.session_state.model = load_model()
 
 # Use the model for prediction safely
