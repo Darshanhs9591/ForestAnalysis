@@ -59,6 +59,11 @@ def load_yolo_model():
         st.error(f"Error loading YOLO model: {e}")
         st.stop()
 
+import streamlit as st
+
+if 'model' not in st.session_state:
+    st.session_state.model = load_model()
+
 
 # Load once and store globally
 
