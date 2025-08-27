@@ -1112,7 +1112,8 @@ elif st.session_state.page == 'coordinate_analysis': # Corrected typo
                     st.image(image, caption=f"Satellite View of ({lat:.4f}, {lon:.4f})", use_container_width=True)
 
                     st.write(f"Running AI model for {analysis_type_coord}...")
-                    results = model.predict(img_np, conf=0.1, verbose=False)
+                    results = st.session_state.model.predict(img_np, conf=0.1, verbose=False)
+
                     result = results[0]
                     
                     if result.masks is not None and result.masks.xyn:
