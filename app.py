@@ -44,11 +44,13 @@ def load_model():
         st.error(f"YOLO model weights not found at '{MODEL_PATH}'. Please ensure the file exists.")
         st.stop()
     try:
-        model = YOLO(MODEL_PATH)
-        return model
+        return YOLO(MODEL_PATH)
     except Exception as e:
         st.error(f"Error loading YOLO model from '{MODEL_PATH}': {e}. Please check the file and your ultralytics installation.")
         st.stop()
+
+model = load_model()
+
 
 def main():
     download_weights()  # Make sure this is defined and called before loading
@@ -844,7 +846,7 @@ elif st.session_state.page == 'tree_coverage':
         st.rerun()
 
 
-model = load_model()
+
 # Feature: Tree Heatmap (no significant change needed here)
 elif st.session_state.page == 'tree_heatmap':
     st.markdown("""
