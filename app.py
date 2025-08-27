@@ -843,6 +843,8 @@ elif st.session_state.page == 'tree_coverage':
         st.session_state.page = 'home'
         st.rerun()
 
+
+model = load_model()
 # Feature: Tree Heatmap (no significant change needed here)
 elif st.session_state.page == 'tree_heatmap':
     st.markdown("""
