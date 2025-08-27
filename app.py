@@ -37,19 +37,25 @@ import os
 import streamlit as st
 from ultralytics import YOLO
 
+import streamlit as st
+from ultralytics import YOLO
+import os
+
 @st.cache_resource
-def load_model():
+def load_yolo_model():
     MODEL_PATH = 'weights/last.pt'
     if not os.path.exists(MODEL_PATH):
-        st.error(f"YOLO model weights not found at '{MODEL_PATH}'. Please ensure the file exists.")
+        st.error(f"YOLO model weights not found at '{MODEL_PATH}'")
         st.stop()
     try:
         return YOLO(MODEL_PATH)
     except Exception as e:
-        st.error(f"Error loading YOLO model from '{MODEL_PATH}': {e}. Please check the file and your ultralytics installation.")
+        st.error(f"Error loading YOLO model: {e}")
         st.stop()
 
-model = load_model()
+# Load once and store globally
+model = load_yolo_model()
+
 
 
 def main():
