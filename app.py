@@ -21,6 +21,26 @@ except ModuleNotFoundError:
     # In a real deployment, you might log this instead of showing an error immediately
     # st.error("The 'streamlit_folium' module is not installed. Please install it using pip install streamlit-folium.")
 
+
+
+import os
+import requests
+
+def download_weights():
+    weights_path = 'weights/last.pt'
+    if not os.path.exists(weights_path):
+        os.makedirs('weights', exist_ok=True)
+        url = 'https://drive.google.com/uc?export=download&id=18Kh8T9GdwMBEOw6DvNR3BHLrhGqioPWs'
+        print("Downloading weights from Google Drive...")
+        r = requests.get(url, stream=True)
+        with open(weights_path, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+        print("Download completed.")
+
+download_weights()
+
 # --- YOLO Model Initialization (no change) ---
 @st.cache_resource
 def load_model():
