@@ -46,9 +46,12 @@ import streamlit as st
 from ultralytics import YOLO
 import os
 
+import streamlit as st
+from ultralytics import YOLO
+import os
+
 @st.cache_resource
-@st.cache_resource
-def load_yolo_model():
+def load_model():
     MODEL_PATH = 'weights/last.pt'
     if not os.path.exists(MODEL_PATH):
         st.error(f"Model weights not found at {MODEL_PATH}")
@@ -59,10 +62,14 @@ def load_yolo_model():
         st.error(f"Error loading YOLO model: {e}")
         st.stop()
 
-import streamlit as st
-
+# Initialize model in session_state if not present
 if 'model' not in st.session_state:
     st.session_state.model = load_model()
+
+# Usage in your app
+img_np = ...  # your preprocessed image numpy array
+results = st.session_state.model.predict(img_np, conf=0.1, verbose=False)
+
 
 
 # Load once and store globally
