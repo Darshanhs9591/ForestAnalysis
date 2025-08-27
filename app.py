@@ -24,22 +24,19 @@ except ModuleNotFoundError:
 
 
 import os
-import requests
+import gdown
 
 def download_weights():
     weights_path = 'weights/last.pt'
     if not os.path.exists(weights_path):
         os.makedirs('weights', exist_ok=True)
-        url = 'https://drive.google.com/uc?export=download&id=18Kh8T9GdwMBEOw6DvNR3BHLrhGqioPWs'
-        print("Downloading weights from Google Drive...")
-        r = requests.get(url, stream=True)
-        with open(weights_path, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
+        url = 'https://drive.google.com/uc?id=18Kh8T9GdwMBEOw6DvNR3BHLrhGqioPWs'
+        print("Downloading weights file using gdown...")
+        gdown.download(url, weights_path, quiet=False)
         print("Download completed.")
 
 download_weights()
+
 
 # --- YOLO Model Initialization (no change) ---
 @st.cache_resource
