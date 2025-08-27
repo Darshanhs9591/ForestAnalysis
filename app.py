@@ -51,6 +51,8 @@ def main():
     st.write("Model loaded successfully.")
     # Proceed with app logic like image uploads, inference etc.
 
+model = load_model()
+results = segment_tree(input_image, model)
 
 # Initialize session state for page navigation
 if 'page' not in st.session_state:
