@@ -36,66 +36,34 @@ def download_weights():
     if not os.path.exists(weights_path):
         os.makedirs('weights', exist_ok=True)
         url = 'https://drive.google.com/uc?id=18Kh8T9GdwMBEOw6DvNR3BHLrhGqioPWs'
-        st.info("Downloading YOLO weights...")
+        st.info("Downloading YOLO weights. Please wait...")
         gdown.download(url, weights_path, quiet=False)
         st.success("Download completed!")
 
-
-
-import os
-import streamlit as st
-from ultralytics import YOLO
-
-import streamlit as st
-from ultralytics import YOLO
-import os
-
-import streamlit as st
-from ultralytics import YOLO
-import os
-
+# Cache the model loading to avoid reloading on each rerun
 @st.cache_resource
 def load_model():
     MODEL_PATH = 'weights/last.pt'
     if not os.path.exists(MODEL_PATH):
-        st.error(f"Model weights not found at {MODEL_PATH}")
+        st.error(f"Model weights not found at {MODEL_PATH}. Please wait for download or check file.")
         st.stop()
     try:
-        return YOLO(MODEL_PATH)
+        model = YOLO(MODEL_PATH)
+        return model
     except Exception as e:
         st.error(f"Error loading YOLO model: {e}")
         st.stop()
 
-# Initialize model in session_state if not present
+# Initialize model in session_state once per session
 if 'model' not in st.session_state:
+    download_weights()           # Ensure weights are downloaded
     st.session_state.model = load_model()
 
-# Usage in your app
-img_np = ...  # your preprocessed image numpy array
-results = st.session_state.model.predict(img_np, conf=0.1, verbose=False)
-
-
-
-# Load once and store globally
-
-
-
-
-def main():
-    download_weights()  # Make sure this is defined and called before loading
-    model = load_model()
-    st.write("Model loaded successfully.")
-
-    img_np = ... # your image as numpy array
-    results = model.predict(img_np, conf=0.1, verbose=False)
-    # Your app logic here, e.g. image uploads and inference
-    # For example:
-    # uploaded_file = st.file_uploader(...)
-    # if uploaded_file:
-    #    img = Image.open(uploaded_file)
-    #    results = model(img)
-    #    ...
-
+# Use the model for prediction safely
+def run_inference(image_pil):
+    img_np = np.array(image_pil.convert("RGB"))
+    results = st.session_state.model.predict(img_np, conf=0.1, verbose=False)
+    return results
 
 
 
