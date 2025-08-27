@@ -61,7 +61,7 @@ def load_yolo_model():
 
 
 # Load once and store globally
-model = load_yolo_model()
+
 
 
 
