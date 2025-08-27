@@ -18,6 +18,13 @@ import gdown
 from ultralytics import YOLO
 
 # Optional Folium import with fallback
+import os
+import streamlit as st
+import gdown
+import numpy as np
+from ultralytics import YOLO
+
+# Optional Folium import with fallback
 try:
     from streamlit_folium import st_folium
     import folium
@@ -25,32 +32,20 @@ try:
 except ModuleNotFoundError:
     FOLIUM_AVAILABLE = False
 
-import gdown
-import os
-import streamlit as st
-
-import gdown
+MODEL_PATH = 'weights/last.pt'  # Path relative to your app root folder
 
 def download_weights():
-    weights_path = 'weights/last.pt'
-    if not os.path.exists(weights_path):
-        os.makedirs('weights', exist_ok=True)
+    if not os.path.exists(MODEL_PATH):
+        os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
         url = 'https://drive.google.com/uc?id=18Kh8T9GdwMBEOw6DvNR3BHLrhGqioPWs'
         st.info("Downloading YOLO weights. Please wait...")
-        gdown.download(url, weights_path, quiet=False)
+        gdown.download(url, MODEL_PATH, quiet=False)
         st.success("Download completed!")
-
-# Cache the model loading to avoid reloading on each rerun
-import os
-import streamlit as st
-from ultralytics import YOLO
-
-MODEL_PATH = 'weights/last.pt'  # Path relative to your app root folder
 
 @st.cache_resource
 def load_model():
     if not os.path.exists(MODEL_PATH):
-        st.error(f"YOLO weights file missing at {MODEL_PATH}. Please add it.")
+        st.error(f"YOLO weights file missing at {MODEL_PATH}. Please add it or check your download.")
         st.stop()
     try:
         model = YOLO(MODEL_PATH)
@@ -59,12 +54,13 @@ def load_model():
         st.error(f"Error loading YOLO model: {e}")
         st.stop()
 
+# Call download_weights before loading the model to ensure weights exist
+download_weights()
 
 # Initialize model in session_state once per session
 if 'model' not in st.session_state:
     st.session_state.model = load_model()
 
-# Use the model for prediction safely
 def run_inference(image_pil):
     img_np = np.array(image_pil.convert("RGB"))
     results = st.session_state.model.predict(img_np, conf=0.1, verbose=False)
